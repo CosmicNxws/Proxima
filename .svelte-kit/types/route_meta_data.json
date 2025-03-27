@@ -1,0 +1,18 @@
+{
+	"/": [],
+	"/alerts/Technicalerror": [],
+	"/auth/callback": [],
+	"/auth/login": [],
+	"/auth/signup": [],
+	"/bookmarks": [],
+	"/comments": [],
+	"/notifications": [],
+	"/profile/[id]": [
+		"src/routes/profile/[id]/+page.server.js"
+	],
+	"/search": [],
+	"/settings": [],
+	"/[slug]": [
+		"src/routes/[slug]/+page.server.js"
+	]
+}
