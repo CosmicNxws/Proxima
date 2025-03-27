@@ -120,18 +120,18 @@
           title: 'Explore', 
           links: [
             { text: 'Articles', url: '/articles' },
-            { text: 'Topics', url: '/topics' },
-            { text: 'Missions', url: '/missions' },
-            { text: 'Technology', url: '/technology' }
+            { text: 'Topics', url: '/pages/topics' },
+            { text: 'Missions', url: '/pages/missions' },
+            { text: 'Technology', url: '/pages/technology' }
           ] 
         },
         { 
           title: 'Company', 
           links: [
-            { text: 'About Us', url: '/about' },
-            { text: 'Our Team', url: '/team' },
-            { text: 'Careers', url: '/careers' },
-            { text: 'Contact', url: '/contact' }
+            { text: 'About Us', url: '/pages/about' },
+            { text: 'Our Team', url: '/pages/team' },
+            { text: 'Careers', url: '/pages/careers' },
+            { text: 'Contact', url: '/pages/contact' }
           ] 
         },
         { 
