@@ -137,7 +137,7 @@
         { 
           title: 'Legal', 
           links: [
-            { text: 'Privacy Policy', url: '/privacy' },
+            { text: 'Privacy Policy', url: '/pages/privacy' },
             { text: 'Terms of Service', url: '/pages/tos' },
             { text: 'Cookie Policy', url: '/cookies' },
             { text: 'Disclaimer', url: '/disclaimer' }

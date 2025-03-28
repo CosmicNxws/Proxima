@@ -19,7 +19,8 @@ export const nodes = [
 	() => import('./nodes/15'),
 	() => import('./nodes/16'),
 	() => import('./nodes/17'),
-	() => import('./nodes/18')
+	() => import('./nodes/18'),
+	() => import('./nodes/19')
 ];
 
 export const server_loads = [];
@@ -35,11 +36,12 @@ export const dictionary = {
 		"/comments": [11],
 		"/notifications": [12],
 		"/pages/about": [13],
-		"/pages/topics": [14],
-		"/pages/tos": [15],
-		"/profile/[id]": [~16,[],[3]],
-		"/search": [17],
-		"/settings": [18]
+		"/pages/privacy": [14],
+		"/pages/topics": [15],
+		"/pages/tos": [16],
+		"/profile/[id]": [~17,[],[3]],
+		"/search": [18],
+		"/settings": [19]
 	};
 
 export const hooks = {
