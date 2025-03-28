@@ -7,21 +7,21 @@
       name: "Tyler",
       role: "Co-Founder & CEO",
       quote: "Space exploration enthusiast - sci fi nerd",
-      avatar: "/avatars/alex.png",
-      expertise: "Admin"
-    },
-    {
-      name: "Jack - Phazzee",
-      role: "Co-Founder & CCO",
-      quote: "I write stuff about spaceflight, study international relations rn", 
-      avatar: "/avatars/naomi.png",
+      avatar: "https://cdn.bsky.app/img/avatar/plain/did:plc:r7zvmqorx24nuiafx6qga6jb/bafkreic2sf5umqn7dqyinwuajughsn6bcsbrfxdnmm5u7jfjx64w7lf2fy@jpeg",
       expertise: "Admin"
     },
     {
       name: "Sam Thibault",
       role: "Co-Founder & CTO",
-      quote: "Tech person 👍",
-      avatar: "/avatars/jordan.png",
+      quote: "Tech Person", 
+      avatar: "https://cdn.bsky.app/img/avatar/plain/did:plc:tchvwsx3ez3c3lkm32pfksrs/bafkreiggug5hpcczy5274tvjfsffbncreqhuthujuimnlrj7e2pabuhzrq@jpeg",
+      expertise: "Admin"
+    },
+    {
+      name: "Jack - Phazzee",
+      role: "Co-Founder & CCO",
+      quote: "I write stuff about spaceflight, study international relations rn",
+      avatar: "https://cosmicnxws.com/teampage/Jack.jpg",
       expertise: "Admin"
     }
   ];
@@ -29,16 +29,16 @@
   // Writing Team
   const writers = [
     {
-      name: "Fetch error",
-      role: "",
-      quote: "",
-      avatar: "/avatars/tycho.png"
+      name: "Brie Archambault",
+      role: "Content Writer & Editor",
+      quote: "Nothing that happens is ever forgotten, even if you can't remember it.",
+      avatar: "https://cdn.bsky.app/img/avatar/plain/did:plc:aab2hclrv7vqsm2ovm2ys5zn/bafkreib3uvgv7qylkawrnckawst4zz6mbek3j4wc4ego3tusae4eg3qtz4@jpeg"
     },
     {
-      name: "Fetch error",
-      role: "",
-      quote: "",
-      avatar: "/avatars/riya.png"
+      name: "Seth G",
+      role: "Writer",
+      quote: "Rocket enjoyer | Professionally Autistic | #1 New Armstrong fan",
+      avatar: "https://cosmic-nxws.ghost.io/content/images/2024/09/20240911_143104.jpg"
     }
   ];
 
@@ -48,13 +48,13 @@
       name: "Fetch error",
       role: "",
       quote: "",
-      avatar: "/avatars/lena.png"
+      avatar: "https://example.com/images/avatars/media1.jpg"
     },
     {
       name: "Fetch error",
       role: "",
       quote: "",
-      avatar: "/avatars/marcus.png"
+      avatar: "https://example.com/images/avatars/media2.jpg"
     }
   ];
 </script>
@@ -103,7 +103,7 @@
     
     <!-- Writing Team -->
     <section class="team-section">
-      <h2 class="neon-blue">Science Writers</h2>
+      <h2 class="neon-blue">Writers</h2>
       <div class="team-grid">
         {#each writers as member, i}
           <div class="crew-card" in:fly={{ y: 20, delay: i * 150 + 300 }}>
@@ -136,6 +136,7 @@
     </section>
   </main>
 </div>
+
 
 <style>
   :global(body) {
