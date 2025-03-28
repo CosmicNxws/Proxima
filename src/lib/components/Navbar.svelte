@@ -96,7 +96,7 @@
 <style>
   /* Base Dark Mode Styles */
   :root {
-    --bg-dark: #1a1a1a;
+    --bg-dark: #10005557;
     --bg-darker: #121212;
     --text-light: #e0e0e0;
     --text-lighter: #f5f5f5;
