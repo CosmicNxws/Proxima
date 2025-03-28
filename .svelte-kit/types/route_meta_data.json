@@ -1,6 +1,9 @@
 {
 	"/": [],
 	"/alerts/Technicalerror": [],
+	"/articles/[slug]": [
+		"src/routes/articles/[slug]/+page.server.js"
+	],
 	"/auth/callback": [],
 	"/auth/login": [],
 	"/auth/signup": [],
@@ -9,12 +12,10 @@
 	"/notifications": [],
 	"/pages/about": [],
 	"/pages/topics": [],
+	"/pages/tos": [],
 	"/profile/[id]": [
 		"src/routes/profile/[id]/+page.server.js"
 	],
 	"/search": [],
-	"/settings": [],
-	"/[slug]": [
-		"src/routes/[slug]/+page.server.js"
-	]
+	"/settings": []
 }

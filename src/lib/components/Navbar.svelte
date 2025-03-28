@@ -2,27 +2,28 @@
   import { user } from '$lib/stores/authStore.js';
   import { fade } from 'svelte/transition';
   import { onMount } from 'svelte';
+  import { base } from '$app/paths';
 
   let mobileMenuOpen = false;
   let logoDesktop = "/Logo/Proximareportdesktop.png";
   let logoMobile = "/Logo/Proximareportmobile.png";
 
+  const navLinks = [
+    { name: 'Home', path: `${base}/` },
+    { name: 'Articles', path: `${base}/pages/articles` },
+    { name: 'Topics', path: `${base}/pages/topics` },
+    { name: 'About', path: `${base}/pages/about` }
+  ];
+
   onMount(() => {
     console.log("Logos loaded:", logoDesktop, logoMobile);
   });
-
-  const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Articles', path: '/articles' },
-    { name: 'Topics', path: '/topics' },
-    { name: 'About', path: '/about' }
-  ];
 </script>
 
 <nav class="navbar">
   <div class="nav-container">
     <!-- Logo -->
-    <a href="/" class="logo">
+    <a href={base || '/'} class="logo">
       <img src={logoDesktop} alt="Proxima Report Logo" class="logo-image desktop-logo">
       <img src={logoMobile} alt="Proxima Report Logo" class="logo-image mobile-logo">
     </a>
@@ -36,20 +37,20 @@
       {/each}
 
       {#if $user}
-        <a href="/profile/{$user.id}" class="nav-link user-link">
+        <a href={`${base}/profile/{$user.id}`} class="nav-link user-link">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
             <path d="M12 2a5 5 0 1 0 5 5 5 5 0 0 0-5-5zm0 8a3 3 0 1 1 3-3 3 3 0 0 1-3 3zm9 11v-1a7 7 0 0 0-7-7h-4a7 7 0 0 0-7 7v1h2v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1z"/>
           </svg>
           Profile
         </a>
-        <a href="/logout" class="nav-link logout-link">
+        <a href={`${base}/logout`} class="nav-link logout-link">
           Logout
         </a>
       {:else}
-        <a href="/alerts/Technicalerror" class="nav-link login-link">
+        <a href={`${base}/alerts/Technicalerror`} class="nav-link login-link">
           Login
         </a>
-        <a href="/alerts/Technicalerror" class="nav-button">Sign Up</a>
+        <a href={`${base}/alerts/Technicalerror`} class="nav-button">Sign Up</a>
       {/if}
     </div>
 
@@ -79,18 +80,17 @@
 
         <div class="mobile-auth-links">
           {#if $user}
-            <a href="/profile/{$user.id}" class="mobile-link">Profile</a>
-            <a href="/logout" class="mobile-link">Logout</a>
+            <a href={`${base}/profile/{$user.id}`} class="mobile-link">Profile</a>
+            <a href={`${base}/logout`} class="mobile-link">Logout</a>
           {:else}
-            <a href="/alerts/Technicalerror" class="mobile-link">Login</a>
-            <a href="/alerts/Technicalerror" class="mobile-button">Sign Up</a>
+            <a href={`${base}/alerts/Technicalerror`} class="mobile-link">Login</a>
+            <a href={`${base}/alerts/Technicalerror`} class="mobile-button">Sign Up</a>
           {/if}
         </div>
       </div>
     </div>
   {/if}
 </nav>
-
 
 
 <style>

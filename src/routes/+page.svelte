@@ -1,6 +1,7 @@
 <script>
   import { fetchPosts } from '$lib/utils/ghostClient.js';
   import { onMount } from 'svelte';
+  import { base } from '$app/paths';
 
   let posts = [];
   let error = null;
@@ -24,7 +25,12 @@
       <article class="post-card">
         {#if post.feature_image}
           <div class="image-container">
-            <img src={post.feature_image} alt={post.title} class="post-image" />
+            <img 
+              src={post.feature_image} 
+              alt={post.title} 
+              class="post-image" 
+              loading="lazy"
+            />
             <div class="image-overlay"></div>
           </div>
         {/if}
@@ -43,12 +49,24 @@
               </span>
             {/if}
           </div>
-          <h2><a href="/{post.slug}">{post.title}</a></h2>
+          <h2>
+            <a 
+              href="{base}/articles/{post.slug}" 
+              data-sveltekit-preload-data="hover"
+            >
+              {post.title}
+            </a>
+          </h2>
           <p class="excerpt">{post.excerpt.split(' ').slice(0, 15).join(' ')}...</p>
           {#if post.authors && post.authors[0]}
             <div class="author">
               {#if post.authors[0].profile_image}
-                <img src={post.authors[0].profile_image} alt={post.authors[0].name} class="author-image" />
+                <img 
+                  src={post.authors[0].profile_image} 
+                  alt={post.authors[0].name} 
+                  class="author-image" 
+                  loading="lazy"
+                />
               {/if}
               <span>By {post.authors[0].name}</span>
             </div>
