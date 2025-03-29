@@ -158,30 +158,21 @@
         </div>
       {/each}
 
-      <!-- Newsletter with enhanced form -->
-      <div class="footer-newsletter" in:receive={{ key: 'newsletter' }} out:send={{ key: 'newsletter' }}>
-        <h3 class="footer-heading">
-          <span class="heading-text">Stay Updated</span>
-          <span class="heading-underline"></span>
-        </h3>
-        <p>Subscribe to our cosmic newsletter for the latest space discoveries</p>
+      <div class="footer-newsletter">
+        <h3 class="footer-heading">Stay Updated</h3>
+        <p>Subscribe to our cosmic newsletter</p>
         <form class="newsletter-form">
           <div class="input-container">
-            <input type="email" placeholder="Your email address" required>
+            <input 
+              type="email" 
+              placeholder="Your email address" 
+              required
+              style="width: 100%; max-width: 100%"
+            >
             <div class="input-border"></div>
           </div>
           <button type="submit" class="submit-button">
-            <span class="button-text">Join Mission</span>
-            <div class="button-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </div>
-            <div class="button-particles">
-              {#each Array(5) as _, i}
-                <span class="particle" style={`--i: ${i}`} />
-              {/each}
-            </div>
+            Join Mission
           </button>
         </form>
       </div>
@@ -522,6 +513,24 @@
     z-index: 1;
   }
 
+  .newsletter-form input {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  margin-right: 0 !important;
+  transform: none !important;
+}
+
+.footer-newsletter {
+  overflow: hidden; /* Contain children */
+  min-width: 0; /* Allow width enforcement */
+}
+
+.newsletter-form {
+  display: grid; /* Better than flex for input containment */
+  grid-template-columns: minmax(0, 1fr); /* Constrain children */
+}
+
   .newsletter-form input::placeholder {
     color: var(--text-tertiary);
   }
@@ -640,6 +649,7 @@
     text-align: center;
     position: relative;
   }
+
 
   .footer-bottom::before {
     content: '';

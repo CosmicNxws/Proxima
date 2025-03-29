@@ -223,21 +223,42 @@
       
       <div class="article-meta">
         <div class="meta-details">
-          {#if article.authors && article.authors.length > 0}
+          {#if article?.authors?.length > 0}
             <span class="authors">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-              </svg>
-              {#each article.authors as author, i}
-                {#if author.profile_image}
-                  <img src={author.profile_image} alt={author.name} class="author-avatar small" />
+                {#if article.authors.length > 1}
+                  <!-- Icon for multiple authors -->
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 {:else}
-                  <div class="author-avatar small placeholder">{author.name.charAt(0)}</div>
+                  <!-- Icon for single author -->
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
                 {/if}
-                {author.name}{i < article.authors.length - 1 ? ', ' : ''}
+              </svg>
+      
+              {#each article.authors as author, i}
+                <span class="author-item">
+                  {#if author.profile_image}
+                    <img 
+                      src={author.profile_image} 
+                      alt={author.name}
+                      class="author-avatar small"
+                      on:error={(e) => e.target.style.display = 'none'}
+                    />
+                  {:else}
+                    <div class="author-avatar small placeholder">
+                      {author.name.charAt(0)}
+                    </div>
+                  {/if}
+                  <span class="author-name">{author.name}</span>
+                </span>
+                
+                {#if i < article.authors.length - 1}
+                  <span class="author-separator">,</span>
+                {/if}
               {/each}
             </span>
           {:else}
@@ -246,7 +267,10 @@
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                 <circle cx="9" cy="7" r="4"></circle>
               </svg>
-              Unknown Author
+              <span class="author-item">
+                <div class="author-avatar small placeholder">?</div>
+                <span class="author-name">Unknown Author</span>
+              </span>
             </span>
           {/if}
           
