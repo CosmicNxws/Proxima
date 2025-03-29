@@ -1,5 +1,5 @@
 <script>
-    import SettingsForm from '../../../lib/components/SettingsForm.svelte';
+    import SettingsForm from '$lib/components/SettingsForm.svelte';
     import { user } from '../../../lib/stores/authStore.js';
   </script>
   
