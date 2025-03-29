@@ -1,7 +1,7 @@
 <script>
-    import ArticleCard from '../../lib/components/ArticleCard.svelte';
-    import { bookmarks } from '../../lib/stores/bookmarkStore.js';
-    import { onMount } from 'svelte';
+  import ArticleCard from '$lib/components/ArticleCard.svelte';
+  import { bookmarks } from '$lib/stores/bookmarkStore'; 
+  import { onMount } from 'svelte';
   
     onMount(async () => {
       await fetchBookmarks();

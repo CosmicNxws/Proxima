@@ -1,0 +1,1 @@
+import{w as i}from"./CM3tjGAh.js";import{s as o}from"./CCdYDHFT.js";const n=i(null),c=async(a,t)=>{const{data:r,error:s}=await o.auth.signUp({email:a,password:t});if(s)throw s;n.set(r.user)},w=async(a,t)=>{const{data:r,error:s}=await o.auth.signInWithPassword({email:a,password:t});if(s)throw s;n.set(r.user)};export{w as l,c as s,n as u};

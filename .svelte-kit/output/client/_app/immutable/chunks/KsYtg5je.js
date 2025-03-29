@@ -1,0 +1,1 @@
+import{w as m}from"./CM3tjGAh.js";import{s as e}from"./CCdYDHFT.js";const c=m([]),d=async(t,o)=>{const{data:s,error:a}=await e.from("comments").insert([{article_id:t,text:o}]);if(a)throw a;c.update(r=>[s[0],...r])};export{d as a,c};
