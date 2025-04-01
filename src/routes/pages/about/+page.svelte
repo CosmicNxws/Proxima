@@ -5,21 +5,21 @@
   const coFounders = [
     {
       name: "Tyler",
-      role: "Co-Founder & CEO",
+      role: "President & CEO",
       quote: "Space exploration enthusiast - sci fi nerd",
       avatar: "https://cdn.bsky.app/img/avatar/plain/did:plc:r7zvmqorx24nuiafx6qga6jb/bafkreic2sf5umqn7dqyinwuajughsn6bcsbrfxdnmm5u7jfjx64w7lf2fy@jpeg",
       expertise: "Admin"
     },
     {
       name: "Sam Thibault",
-      role: "Co-Founder & CTO",
+      role: "COO & CTO",
       quote: "Tech Person", 
       avatar: "https://cdn.bsky.app/img/avatar/plain/did:plc:tchvwsx3ez3c3lkm32pfksrs/bafkreiggug5hpcczy5274tvjfsffbncreqhuthujuimnlrj7e2pabuhzrq@jpeg",
       expertise: "Admin"
     },
     {
       name: "Jack - Phazzee",
-      role: "Co-Founder & CCO",
+      role: "Lead Editor & CCO",
       quote: "I write stuff about spaceflight, study international relations rn",
       avatar: "https://cosmicnxws.com/teampage/Jack.jpg",
       expertise: "Admin"
