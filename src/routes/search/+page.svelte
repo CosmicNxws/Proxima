@@ -1,8 +1,15 @@
 <script>
-    import ArticleCard from '../../../lib/components/ArticleCard.svelte';
-    import { searchArticles } from '../../../lib/utils/searchUtils.js';
-    import { articles } from '../../../lib/stores/articleStore.js';
-    import { onMount } from 'svelte';
+    // Components
+  import ArticleCard from '$lib/components/ArticleCard.svelte';
+  
+  // Stores
+  import { articles } from '$lib/stores/articleStore';
+  
+  // Utilities
+  import { searchArticles } from '$lib/utils/searchUtils';
+  
+  // Svelte internals
+  import { onMount } from 'svelte';
   
     let query = '';
   

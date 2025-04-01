@@ -1,5 +1,5 @@
 <script>
-    import { notifications } from '../../../lib/stores/notificationStore.js';
+    import { notifications } from '$lib/stores/notificationStore';
     import { onMount } from 'svelte';
   
     onMount(async () => {

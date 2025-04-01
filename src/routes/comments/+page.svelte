@@ -1,6 +1,6 @@
 <script>
-    import { comments } from '../../lib/stores/commentStore.js';
-    import { onMount } from 'svelte';
+     import { comments } from '$lib/stores/commentStore'; 
+     import { onMount } from 'svelte';
   
     onMount(async () => {
       await fetchComments();
