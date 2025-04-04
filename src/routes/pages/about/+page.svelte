@@ -19,11 +19,7 @@
     },
     {
       name: "Jack - Phazzee",
-<<<<<<< HEAD
-      role: "CCO & Lead Editor",
-=======
       role: "Lead Editor & CCO",
->>>>>>> 005f242924936e0d33c4aeed32a3ba4260b63869
       quote: "I write stuff about spaceflight, study international relations rn",
       avatar: "https://cosmicnxws.com/teampage/Jack.jpg",
       expertise: "Admin"
