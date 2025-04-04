@@ -3,25 +3,67 @@
   import { onMount } from 'svelte';
   import { base } from '$app/paths';
 
-  let posts = [];
+  let visiblePosts = [];
+  let currentPage = 1;
+  const postsPerPage = 15;
+  let totalPosts = 0;
   let error = null;
+  let isLoading = false;
+  let hasMore = true;
 
   onMount(async () => {
+    await loadPosts();
+  });
+
+  const loadPosts = async () => {
     try {
-      posts = await fetchPosts();
-      console.log('Posts:', posts);
+      isLoading = true;
+      const response = await fetchPosts({
+        limit: postsPerPage,
+        page: currentPage,
+        include: 'tags,authors',
+        order: 'published_at DESC'
+      });
+
+      // Ghost API v3+ returns posts array and pagination meta
+      const newPosts = response.posts || response;
+
+      if (response.meta?.pagination) {
+        totalPosts = response.meta.pagination.total;
+        hasMore = currentPage < response.meta.pagination.pages;
+      } else {
+        // Fallback for older API versions
+        hasMore = newPosts.length === postsPerPage;
+        if (currentPage === 1) {
+          totalPosts = hasMore ? postsPerPage + 1 : newPosts.length;
+        }
+      }
+
+      // For first page, replace all posts
+      // For subsequent pages, append new posts
+      visiblePosts = currentPage === 1 ? newPosts : [...visiblePosts, ...newPosts];
+
     } catch (err) {
       console.error('Failed to fetch posts:', err);
       error = 'Failed to load posts. Please try again later.';
+    } finally {
+      isLoading = false;
     }
-  });
+  };
+
+  const loadMorePosts = async () => {
+    currentPage++;
+    await loadPosts();
+  };
 </script>
+
+<meta name="google-adsense-account" content="ca-pub-1753330877601837">
 
 {#if error}
   <p class="error">{error}</p>
-{:else if posts.length > 0}
+{:else if visiblePosts.length > 0}
   <div class="posts-grid">
-    {#each posts as post}
+    {#each visiblePosts as post}
       <article class="post-card">
         {#if post.feature_image}
           <div class="image-container">
@@ -30,6 +72,8 @@
               alt={post.title} 
               class="post-image" 
               loading="lazy"
+              width="320"
+              height="200"
             />
             <div class="image-overlay"></div>
           </div>
@@ -57,7 +101,9 @@
               {post.title}
             </a>
           </h2>
-          <p class="excerpt">{post.excerpt.split(' ').slice(0, 15).join(' ')}...</p>
+          <p class="excerpt">
+            {post.excerpt || post.custom_excerpt || ''}
+          </p>
           {#if post.authors && post.authors[0]}
             <div class="author">
               {#if post.authors[0].profile_image}
@@ -66,6 +112,8 @@
                   alt={post.authors[0].name} 
                   class="author-image" 
                   loading="lazy"
+                  width="28"
+                  height="28"
                 />
               {/if}
               <span>By {post.authors[0].name}</span>
@@ -75,7 +123,27 @@
       </article>
     {/each}
   </div>
-{:else}
+
+  <div class="load-more-container">
+    {#if hasMore}
+      <button 
+        class="load-more-button" 
+        on:click={loadMorePosts}
+        disabled={isLoading}
+      >
+        {#if isLoading}
+          <span class="loading-spinner">⏳</span>
+        {:else}
+          Load More (+{Math.min(postsPerPage, totalPosts - visiblePosts.length)})
+        {/if}
+      </button>
+    {:else if visiblePosts.length > 0}
+      <p class="no-more-posts">
+        Showing all {visiblePosts.length} posts
+      </p>
+    {/if}
+  </div>
+{:else if !isLoading}
   <p class="no-posts">No posts found.</p>
 {/if}
 
@@ -232,6 +300,59 @@
     border: 2px solid #4f46e5;
   }
 
+  .load-more-container {
+    display: flex;
+    justify-content: center;
+    margin: 3rem 0;
+    padding: 0 2rem;
+  }
+
+  .load-more-button {
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    padding: 0.75rem 2.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .load-more-button:hover:not(:disabled) {
+    background-color: #6366f1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .load-more-button:disabled {
+    background-color: #4f46e580;
+    cursor: not-allowed;
+  }
+
+  .loading-spinner {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .no-more-posts {
+    color: #94a3b8;
+    text-align: center;
+    font-size: 0.9rem;
+    padding: 1rem;
+  }
+
   @media (max-width: 1024px) {
     .posts-grid {
       gap: 2rem;
@@ -248,6 +369,10 @@
     .post-card {
       max-width: 400px;
       margin: 0 auto;
+      width: 100%;
+    }
+
+    .load-more-button {
       width: 100%;
     }
   }

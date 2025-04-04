@@ -1,39 +1,76 @@
 import GhostContentAPI from '@tryghost/content-api';
 
-// Initialize API client with proper configuration
-const ghost = new GhostContentAPI({
+// Initialize API client with your credentials
+const api = new GhostContentAPI({
   url: 'https://cosmic-nxws.ghost.io',
   key: 'b9bda32fdf7e722dbbf64f0f8d',
   version: 'v5.0'
 });
 
 /**
- * Fetch all posts with proper author handling
+ * Fetch posts with pagination support
+ * @param {Object} [options] - Fetch options
+ * @param {number} [options.page=1] - Page number
+ * @param {number} [options.limit=15] - Posts per page
+ * @param {string} [options.filter] - Ghost filter string
+ * @returns {Promise<{posts: Array, meta: Object}>}
  */
-export const fetchPosts = async () => {
-  try {
-    const posts = await ghost.posts.browse({
-      limit: 15,
-      include: ['authors', 'tags', 'primary_author'],
-      fields: ['title', 'slug', 'feature_image', 'excerpt', 'published_at', 'custom_excerpt'],
-      order: 'published_at DESC'
-    });
+export const fetchPosts = async (options = {}) => {
+  const defaultOptions = {
+    limit: 15,
+    page: 1,
+    include: ['authors', 'tags'],
+    fields: ['title', 'slug', 'feature_image', 'excerpt', 'published_at', 'custom_excerpt', 'html'],
+    order: 'published_at DESC',
+    filter: 'status:published'
+  };
 
-    // Normalize author data structure
-    return posts.map(post => ({
-      ...post,
-      authors: post.authors || (post.primary_author ? [post.primary_author] : []),
-      reading_time: post.reading_time || calculateReadingTime(post.html)
-    }));
+  const finalOptions = { ...defaultOptions, ...options };
+
+  try {
+    const posts = await api.posts.browse(finalOptions);
     
+    return {
+      posts: posts.map(post => ({
+        ...post,
+        // Normalize author data
+        authors: post.authors || (post.primary_author ? [post.primary_author] : []),
+        // Calculate reading time if missing
+        reading_time: post.reading_time || calculateReadingTime(post.html || '')
+      })),
+      meta: posts.meta || {
+        pagination: {
+          page: finalOptions.page,
+          limit: finalOptions.limit,
+          pages: Math.ceil(posts.length / finalOptions.limit),
+          total: posts.length,
+          next: posts.length === finalOptions.limit ? finalOptions.page + 1 : null,
+          prev: finalOptions.page > 1 ? finalOptions.page - 1 : null
+        }
+      }
+    };
   } catch (error) {
-    console.error('Failed to fetch posts:', error);
-    return [];
+    console.error('Ghost API Error:', error);
+    return {
+      posts: [],
+      meta: {
+        pagination: {
+          page: finalOptions.page,
+          limit: finalOptions.limit,
+          pages: 0,
+          total: 0,
+          next: null,
+          prev: null
+        }
+      }
+    };
   }
 };
 
 /**
- * Fetch single article with robust error handling
+ * Fetch single article with complete data
+ * @param {string} slug - Post slug
+ * @returns {Promise<Object|null>}
  */
 export const fetchArticle = async (slug) => {
   if (!slug) {
@@ -42,105 +79,34 @@ export const fetchArticle = async (slug) => {
   }
 
   try {
-    // First try with the SDK
-    const article = await ghost.posts.read({
+    const post = await api.posts.read({
       slug,
-      include: ['authors', 'tags', 'primary_author'],
+      include: ['authors', 'tags'],
       formats: ['html']
     });
 
-    // Ensure we have author data
-    if (!article.authors && article.primary_author) {
-      article.authors = [article.primary_author];
-    } else if (!article.authors?.length) {
-      article.authors = [createDefaultAuthor()];
-    }
-
-    // Calculate reading time if missing
-    if (!article.reading_time) {
-      article.reading_time = calculateReadingTime(article.html);
-    }
-
-    return article;
-
+    return {
+      ...post,
+      authors: post.authors || (post.primary_author ? [post.primary_author] : []),
+      reading_time: post.reading_time || calculateReadingTime(post.html || '')
+    };
   } catch (error) {
-    console.error(`Primary fetch failed for ${slug}:`, error);
-    
-    // Fallback to direct API call
-    try {
-      const response = await fetch(
-        `https://cosmic-nxws.ghost.io/ghost/api/content/posts/slug/${slug}/` + 
-        `?key=b9bda32fdf7e722dbbf64f0f8d&include=authors,tags`
-      );
-      
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      
-      const data = await response.json();
-      const article = data.posts?.[0];
-      
-      if (!article) throw new Error('Article not found in response');
-      
-      // Normalize author data
-      article.authors = article.authors || 
-                       (article.primary_author ? [article.primary_author] : [createDefaultAuthor()]);
-      
-      return article;
-      
-    } catch (fallbackError) {
-      console.error(`Fallback failed for ${slug}:`, fallbackError);
-      return createErrorArticle(slug);
-    }
+    console.error(`Failed to fetch article ${slug}:`, error);
+    return null;
   }
 };
 
-// Helper function to calculate reading time
-function calculateReadingTime(html) {
-  if (!html) return 1;
-  const wordCount = html.split(/\s+/).length;
-  return Math.max(1, Math.ceil(wordCount / 200));
-}
-
-// Creates a default author object
-function createDefaultAuthor() {
-  return {
-    name: 'Staff Writer',
-    profile_image: null,
-    bio: '',
-    website: ''
-  };
-}
-
-// Creates an error state article
-function createErrorArticle(slug) {
-  return {
-    title: `Error loading: ${slug}`,
-    html: '<p>We apologize, but this article could not be loaded.</p>',
-    authors: [createDefaultAuthor()],
-    reading_time: 1,
-    feature_image: null,
-    published_at: new Date().toISOString()
-  };
-}
-
 /**
  * Test API connection
+ * @returns {Promise<{success: boolean, version?: string, error?: string}>}
  */
 export const testConnection = async () => {
   try {
-    const response = await fetch(
-      'https://cosmic-nxws.ghost.io/ghost/api/content/posts/' +
-      '?key=b9bda32fdf7e722dbbf64f0f8d&limit=1'
-    );
-    
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    
-    const data = await response.json();
+    const response = await api.posts.browse({ limit: 1 });
     return {
       success: true,
-      version: response.headers.get('x-ghost-version') || 'unknown',
-      postsCount: data.posts?.length || 0
+      version: 'v5.0' // Ghost API version
     };
-    
   } catch (error) {
     console.error('Connection test failed:', error);
     return {
@@ -149,3 +115,11 @@ export const testConnection = async () => {
     };
   }
 };
+
+// Helper function to calculate reading time
+function calculateReadingTime(html) {
+  if (!html) return 1;
+  const text = html.replace(/<[^>]*>/g, ' '); // Strip HTML tags
+  const wordCount = text.split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil(wordCount / 200)); // 200 words per minute
+}

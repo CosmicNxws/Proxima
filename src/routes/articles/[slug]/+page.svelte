@@ -174,6 +174,8 @@
   }
 </script>
 
+<meta name="google-adsense-account" content="ca-pub-1753330877601837">
+
 <svelte:head>
   {#if article}
     <title>{article.title} | STEM Journal</title>
