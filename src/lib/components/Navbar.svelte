@@ -10,7 +10,7 @@
 
   const navLinks = [
     { name: 'Home', path: `${base}/` },
-    { name: 'Articles', path: `${base}/pages/articles` },
+    { name: 'Gallery', path: `${base}/pages/gallery/` },
     { name: 'Launches', path: `${base}/pages/launches` },
     { name: 'About', path: `${base}/pages/about` }
   ];

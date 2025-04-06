@@ -1,4 +1,5 @@
 <script>
+  // ===== MAIN COMPONENT LOGIC ===== //
   import { fetchPosts } from '$lib/utils/ghostClient.js';
   import { onMount } from 'svelte';
   import { base } from '$app/paths';
@@ -11,10 +12,31 @@
   let isLoading = false;
   let hasMore = true;
 
-  onMount(async () => {
-    await loadPosts();
-  });
+  // ===== ANALYTICS LOADER ===== //
+  const loadAnalytics = () => {
+    // Only run on client-side
+    if (typeof document !== 'undefined') {
+      // Ahrefs Analytics
+      const ahrefsScript = document.createElement('script');
+      ahrefsScript.src = 'https://analytics.ahrefs.com/analytics.js';
+      ahrefsScript.setAttribute('data-key', 't/UVYeIfl8YZjVsuJ8k1OQ');
+      ahrefsScript.async = true;
+      document.head.appendChild(ahrefsScript);
 
+      // Google Analytics (replace GA_MEASUREMENT_ID with your actual ID)
+      const gtagScript = document.createElement('script');
+      gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID';
+      gtagScript.async = true;
+      document.head.appendChild(gtagScript);
+      
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function(){ dataLayer.push(arguments); };
+      gtag('js', new Date());
+      gtag('config', 'GA_MEASUREMENT_ID');
+    }
+  };
+
+  // ===== POSTS LOADING ===== //
   const loadPosts = async () => {
     try {
       isLoading = true;
@@ -25,24 +47,18 @@
         order: 'published_at DESC'
       });
 
-      // Ghost API v3+ returns posts array and pagination meta
       const newPosts = response.posts || response;
-
       if (response.meta?.pagination) {
         totalPosts = response.meta.pagination.total;
         hasMore = currentPage < response.meta.pagination.pages;
       } else {
-        // Fallback for older API versions
         hasMore = newPosts.length === postsPerPage;
         if (currentPage === 1) {
           totalPosts = hasMore ? postsPerPage + 1 : newPosts.length;
         }
       }
 
-      // For first page, replace all posts
-      // For subsequent pages, append new posts
       visiblePosts = currentPage === 1 ? newPosts : [...visiblePosts, ...newPosts];
-
     } catch (err) {
       console.error('Failed to fetch posts:', err);
       error = 'Failed to load posts. Please try again later.';
@@ -51,20 +67,49 @@
     }
   };
 
+  onMount(async () => {
+    await loadPosts();
+    loadAnalytics(); // Load analytics after initial render
+  });
+
   const loadMorePosts = async () => {
     currentPage++;
     await loadPosts();
   };
 </script>
 
-<meta name="google-adsense-account" content="ca-pub-1753330877601837">
+<svelte:head>
+  <!-- ===== SEO META TAGS ===== -->
+  <meta name="google-adsense-account" content="ca-pub-1753330877601837">
+  <meta name="description" content="Discover our latest articles and insights on Proximareport.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Proxima Report">
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <!-- ===== STRUCTURED DATA ===== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Proxima Report",
+    "url": "Proximareport.com",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "{search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+</svelte:head>
 
+<!-- ===== MAIN CONTENT ===== -->
 {#if error}
   <p class="error">{error}</p>
 {:else if visiblePosts.length > 0}
   <div class="posts-grid">
     {#each visiblePosts as post}
-      <article class="post-card">
+      <article class="post-card" itemscope itemtype="https://schema.org/BlogPosting">
         {#if post.feature_image}
           <div class="image-container">
             <img 
@@ -74,6 +119,7 @@
               loading="lazy"
               width="320"
               height="200"
+              itemprop="image"
             />
             <div class="image-overlay"></div>
           </div>
@@ -81,10 +127,10 @@
         <div class="card-content">
           <div class="meta">
             {#if post.tags && post.tags[0]}
-              <span class="tag">{post.tags[0].name}</span>
+              <span class="tag" itemprop="keywords">{post.tags[0].name}</span>
             {/if}
             {#if post.published_at}
-              <span class="date">
+              <span class="date" itemprop="datePublished" content="{new Date(post.published_at).toISOString()}">
                 {new Date(post.published_at).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'short',
@@ -93,19 +139,20 @@
               </span>
             {/if}
           </div>
-          <h2>
+          <h2 itemprop="headline">
             <a 
               href="{base}/articles/{post.slug}" 
               data-sveltekit-preload-data="hover"
+              itemprop="url"
             >
               {post.title}
             </a>
           </h2>
-          <p class="excerpt">
+          <p class="excerpt" itemprop="description">
             {post.excerpt || post.custom_excerpt || ''}
           </p>
           {#if post.authors && post.authors[0]}
-            <div class="author">
+            <div class="author" itemprop="author" itemscope itemtype="https://schema.org/Person">
               {#if post.authors[0].profile_image}
                 <img 
                   src={post.authors[0].profile_image} 
@@ -114,9 +161,10 @@
                   loading="lazy"
                   width="28"
                   height="28"
+                  itemprop="image"
                 />
               {/if}
-              <span>By {post.authors[0].name}</span>
+              <span itemprop="name">By {post.authors[0].name}</span>
             </div>
           {/if}
         </div>
@@ -130,6 +178,7 @@
         class="load-more-button" 
         on:click={loadMorePosts}
         disabled={isLoading}
+        aria-label="Load more posts"
       >
         {#if isLoading}
           <span class="loading-spinner">⏳</span>
