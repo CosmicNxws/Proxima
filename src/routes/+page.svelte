@@ -193,7 +193,7 @@
     {/if}
   </div>
 {:else if !isLoading}
-  <p class="no-posts">No posts found.</p>
+  <p class="no-posts">A server error occurred No posts were found - Contact Staff</p>
 {/if}
 
 <style>
