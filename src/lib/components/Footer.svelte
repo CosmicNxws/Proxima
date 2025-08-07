@@ -181,7 +181,7 @@
     <div class="footer-bottom">
       <p>© {currentYear} Proxima Report LLC. All rights reserved.</p>
       <div class="footer-meta">
-        <span>Exploring the universe since 2023</span>
+        <span>Site Version 1.0 -- This version is being  deprecated and will shut down Aug 8th 2025</span>
         <span class="separator">•</span>
         <span>Made with <span class="pulse">♥</span> among the stars</span>
       </div>

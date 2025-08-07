@@ -2,6 +2,7 @@
 <script>
   import Navbar from '$lib/components/Navbar.svelte';
   import Footer from '$lib/components/Footer.svelte';
+  import MaintenanceNotice from '$lib/components/MaintenanceNotice.svelte';
   import { onMount } from 'svelte';
 
   onMount(() => {
@@ -27,6 +28,7 @@
     <slot />
   </main>
   <Footer />
+  <MaintenanceNotice />
 </div>
 
 <style>

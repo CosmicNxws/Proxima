@@ -22,8 +22,8 @@
         </li>
       {/each}
     </ul>
-    <textarea bind:value={newComment} placeholder="Add a comment..." />
-    <button on:click={handleSubmit}>Post Comment</button>
+    <textarea bind:value={newComment} placeholder="Comment Section disabled as we perpare for ver 2.0" />
+    <button on:click={handleSubmit}>Comments are disabled</button>
   </div>
   
   <style>

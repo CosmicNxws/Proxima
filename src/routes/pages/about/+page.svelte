@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts"> 
   import { fade, fly } from 'svelte/transition';
   
   // Leadership Team
@@ -65,6 +65,11 @@
 
 <div class="cosmic-bg">
   <main class="container">
+    <!-- 🚨 Shutdown Notice Box -->
+    <div class="notice-box" in:fade>
+      🚨 <strong>Notice:</strong> Site version 1.0 will be shut down on <strong>August 8th</strong>. Services will be temporarily unavailable during this time. Thank you for your patience.
+    </div>
+
     <!-- Mission Section -->
     <section class="mission" in:fade>
       <h1 class="neon-blue">AD ASTRA PER SCIENTIA</h1>
@@ -137,7 +142,6 @@
   </main>
 </div>
 
-
 <style>
   :global(body) {
     margin: 0;
@@ -158,7 +162,24 @@
     max-width: 1000px;
     margin: 0 auto;
   }
-  
+
+  .notice-box {
+    background-color: #ff1e00;
+    color: #ffffff;
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 2rem;
+    box-shadow: 0 0 10px rgba(255, 30, 0, 0.5);
+    animation: pulseNotice 2s infinite ease-in-out;
+  }
+
+  @keyframes pulseNotice {
+    0%, 100% { box-shadow: 0 0 10px rgba(255, 30, 0, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(255, 30, 0, 0.9); }
+  }
+
   .mission {
     text-align: center;
     margin-bottom: 4rem;
